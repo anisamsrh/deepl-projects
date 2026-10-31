@@ -47,10 +47,11 @@ def validate_claim(extracted_data: dict) -> dict:
     # check ppn
     # is tax amount shown?
     tax_valid = True
-    has_tax = tax_percentage <= 0 or tax_amount <= 0
-    if has_tax:
+    has_tax = tax_percentage > 0 or tax_amount > 0
+    if not has_tax:
         rejection_reasons.append("Tax amount is not shown or not valid.")
         tax_valid = False
+    if has_tax:
         # is tax amount correctly calcullated?
         if tax_amount == 0 and subtotal and grand_total:
             tax_amount = grand_total - subtotal
@@ -75,7 +76,7 @@ def validate_claim(extracted_data: dict) -> dict:
             tax_valid = False
 
     # decide final status
-    if not has_store_name and not has_npwp and not has_items and not has_tax:
+    if not has_store_name or not has_npwp or not has_items or not has_tax:
         status = "rejected"
     elif rejection_reasons:
         status = "needs_review"
