@@ -155,6 +155,29 @@ async def analyze_claim(file: UploadFile = File(...)):
         contents = await file.read()
         image = Image.open(io.BytesIO(contents))
 
+        # TEMPORARY SO NOT WASTING API LIMIT
+        import ast 
+        # return ast.literal_eval("{'merchant_info': {'store_name': 'UNGGUL MART ANTASARI', 'npwp': '061.332.005.0-727.000', 'has_store_name': True, 'has_npwp': True}, 'items': [{'item_name': 'FINNA ULEG SAMBAL UDANG 10`SX15G/10', 'quantity': 1, 'price_per_unit': 14500, 'total_price': 14500}, {'item_name': 'FINNA ULEG SAMBAL BAWANG 10`SX20G/10', 'quantity': 1, 'price_per_unit': 14500, 'total_price': 14500}, {'item_name': 'WALL`S PADLE POP 55ML LEMON TEA/36', 'quantity': 1, 'price_per_unit': 3000, 'total_price': 3000}, {'item_name': 'WALLS 57ML COOKIES & CREAM/42', 'quantity': 1, 'price_per_unit': 5000, 'total_price': 5000}], 'financial_summary': {'subtotal': 33333, 'tax_amount_extracted': 3667, 'total_amount': 37000, 'detected_ppn_rate': 11}, 'validation_result': {'status': 'approved', 'validation_checks': {'store_name_present': True, 'npwp_present': True, 'items_extracted': True, 'ppn_valid': True}, 'rejection_reasons': []}}")
+        return ast.literal_eval(
+    "{"
+    "'merchant_info': {'store_name': 'TLOGOMAS 44 MALANG', 'npwp': None, 'has_store_name': True, 'has_npwp': False},"
+    "'items': ["
+    "{'item_name': 'POP MIE AYAM 75G', 'quantity': 1, 'price_per_unit': 4900, 'total_price': 4900},"
+    "{'item_name': 'POP MIE PD.DWR AYM75', 'quantity': 1, 'price_per_unit': 5400, 'total_price': 5400},"
+    "{'item_name': 'NESTLE PURE LIFE 600', 'quantity': 2, 'price_per_unit': 3600, 'total_price': 7200},"
+    "{'item_name': 'LE MINERALE 600ML', 'quantity': 2, 'price_per_unit': 3500, 'total_price': 7000},"
+    "{'item_name': 'ULTRA KCNG HIJAU 250', 'quantity': 1, 'price_per_unit': 4900, 'total_price': 4900},"
+    "{'item_name': 'NUTRIJEL PWD.STRW.15', 'quantity': 2, 'price_per_unit': 6600, 'total_price': 13200},"
+    "{'item_name': 'KNZLER SNGLES KJU 65', 'quantity': 1, 'price_per_unit': 8700, 'total_price': 8700},"
+    "{'item_name': 'KNZLER SNGLES HOT 65', 'quantity': 1, 'price_per_unit': 8700, 'total_price': 8700},"
+    "{'item_name': 'KANZLR BAKSO ORI 48G', 'quantity': 2, 'price_per_unit': 8700, 'total_price': 17400}"
+    "],"
+    "'financial_summary': {'subtotal': 77400, 'tax_amount_extracted': 7036, 'total_amount': 75400, 'detected_ppn_rate': 10},"
+    "'validation_result': {'status': 'needs_review', 'validation_checks': {'store_name_present': True, 'npwp_present': False, 'items_extracted': True, 'ppn_valid': False}, 'rejection_reasons': [\"Merchant's NPWP is not valid or not found.\", 'Tax amount is not correctly calculated. Expected: 7740, Found: 7036.']}"
+    "}"
+)
+                                
+
         response = client.models.generate_content(
             model = 'gemini-3-flash-preview',
             contents = [PROMPT_EXTRACTION, image])
@@ -165,6 +188,13 @@ async def analyze_claim(file: UploadFile = File(...)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to process document: {str(e)}")
 
-
+# image = Image.open("../dummies/1_receipt 3.jpg")
+# response = client.models.generate_content(
+#             model = 'gemini-3-flash-preview',
+#             contents = [PROMPT_EXTRACTION, image])
+# clean_json_str = response.text.replace("```json", "").replace("```", "").strip()
+# extracted_data = json.loads(clean_json_str)
+# result = validate_claim(extracted_data)
+# print(result)
     
 
