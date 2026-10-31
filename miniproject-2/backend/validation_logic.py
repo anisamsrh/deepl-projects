@@ -1,3 +1,5 @@
+import re
+
 def validate_claim(extracted_data: dict) -> dict: 
     rejection_reasons = []
 
@@ -45,34 +47,35 @@ def validate_claim(extracted_data: dict) -> dict:
     # check ppn
     # is tax amount shown?
     tax_valid = True
-    if tax_percentage <= 0 or tax_amount <= 0:
+    has_tax = tax_percentage <= 0 or tax_amount <= 0
+    if has_tax:
         rejection_reasons.append("Tax amount is not shown or not valid.")
         tax_valid = False
-    # is tax amount correctly calcullated?
-    if tax_amount == 0 and subtotal and grand_total:
-        tax_amount = grand_total - subtotal
-    if tax_percentage > 0 and subtotal and tax_amount:
-        expected_tax_amount = round(subtotal * (tax_percentage / 100))
-        if tax_amount != expected_tax_amount:
-            rejection_reasons.append(f"Tax amount is not correctly calculated. Expected: {expected_tax_amount}, Found: {tax_amount}.")
+        # is tax amount correctly calcullated?
+        if tax_amount == 0 and subtotal and grand_total:
+            tax_amount = grand_total - subtotal
+        if tax_percentage > 0 and subtotal and tax_amount:
+            expected_tax_amount = round(subtotal * (tax_percentage / 100))
+            if tax_amount != expected_tax_amount:
+                rejection_reasons.append(f"Tax amount is not correctly calculated. Expected: {expected_tax_amount}, Found: {tax_amount}.")
+                tax_valid = False
+        # is tax amount adere to regulation?
+        if tax_percentage == 0:
+            if subtotal and tax_amount:
+                tax_percentage = round(tax_amount / subtotal * 100)
+                grand_total = grand_total or subtotal + tax_amount
+            elif subtotal and grand_total:
+                tax_amount = tax_amount or grand_total - subtotal
+                tax_percentage = round(tax_amount / subtotal * 100)
+            elif tax_amount and grand_total:
+                subtotal = subtotal or grand_total - tax_amount
+                tax_percentage = round(tax_amount / subtotal * 100)
+        if tax_percentage > 11:
+            rejection_reasons.append("Tax percentage exceeds the allowed limit of 11%.")
             tax_valid = False
-    # is tax amount adere to regulation?
-    if tax_percentage == 0:
-        if subtotal and tax_amount:
-            tax_percentage = round(tax_amount / subtotal * 100)
-            grand_total = grand_total or subtotal + tax_amount
-        elif subtotal and grand_total:
-            tax_amount = tax_amount or grand_total - subtotal
-            tax_percentage = round(tax_amount / subtotal * 100)
-        elif tax_amount and grand_total:
-            subtotal = subtotal or grand_total - tax_amount
-            tax_percentage = round(tax_amount / subtotal * 100)
-    if tax_percentage > 11:
-        rejection_reasons.append("Tax percentage exceeds the allowed limit of 11%.")
-        tax_valid = False
 
     # decide final status
-    if not has_store_name and not has_npwp and not has_items:
+    if not has_store_name and not has_npwp and not has_items and not has_tax:
         status = "rejected"
     elif rejection_reasons:
         status = "needs_review"

@@ -9,9 +9,8 @@ from slowapi.errors import RateLimitExceeded
 import io
 import json
 import os
-import re
 
-from validation_logic import validate_claim
+from .validation_logic import validate_claim
 
 load_dotenv()
 client = genai.Client(api_key=os.getenv("GEMINI_KEY"))
@@ -41,13 +40,13 @@ Anda adalah asisten ekstraksi dokumen keuangan. Analisis gambar struk/faktur/res
 }
 
 Aturan Ekstraksi:
-1. Pastikan semua harga dan nominal berupa angka murni (number) tanpa "Rp" atau titik/koma pemisah ribuan.
+1. Pastikan semua harga dan nominal berupa angka murni (number) tanpa "Rp" atau titik/koma pemisah ribuan. Jika tidak ditemukan, kembalikan 0
 2. Jika item tidak memiliki quantity, asumsikan 1.
 3. Ekstrak NPWP secara teliti jika tercantum pada dokumen.
 """
 
 @app.post("/analyze-claim")
-@limiter.limit("4/minute")
+@limiter.limit("5/minute")
 async def analyze_claim(request: Request, file: UploadFile = File(...)):
     if not file.content_type.startswith("image/"):
         raise HTTPException(status_code=400, detail="Document must be an image.")

@@ -18,7 +18,7 @@ with st.status("2. Validation Result", type="step", expanded=True, state="runnin
             with st.spinner("VLM is analyzing your receipt..."):
                 try:
                     files = {"file": (uploaded_file.name, uploaded_file.getvalue(), uploaded_file.type)}
-                    res = requests.post("http://localhost:8000/analyze-claim", files=files)
+                    res = requests.post("http://127.0.0.1:8000/analyze-claim", files=files)
 
                     if res.status_code == 200:
                         data = res.json()

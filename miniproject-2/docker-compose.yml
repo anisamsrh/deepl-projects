@@ -1,0 +1,12 @@
+services:
+  receipt-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: receipt-validator-app
+    container_name: rv_app
+    ports:
+      - "8000:8000"   # Port FastAPI
+      - "8501:8501"   # Port Streamlit
+    env_file:
+      - .env

@@ -26,11 +26,11 @@ Receipts will be automatically marked as **REJECTED** if these pieces of informa
 Receipt will be marked as **ACCEPTED** if all criteria are met and **NEED REVIEW** conversely, such as due to missing information on one of the items.
 
 ## Setup
-1. Download dependencies 
-```bash
-pip install -r requirements.txt
-```
-2. Create .env and put your API_KEY inside
+1. Create .env and put your API_KEY inside
 ```
 GEMINI_KEY=YOUR_API_KEY
+```
+2. Build and run Docker Container
+```
+docker compose up -d --built
 ```
