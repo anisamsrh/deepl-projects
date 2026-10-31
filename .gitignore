@@ -1,2 +1,9 @@
+# IDE
+.vscode/*
+
+# DEV
+*cache*
 data*
 weight*
+.env
+*/dummies/*

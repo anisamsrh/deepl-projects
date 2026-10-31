@@ -30,3 +30,7 @@ Receipt will be marked as **ACCEPTED** if all criteria are met and **NEED REVIEW
 ```bash
 pip install -r requirements.txt
 ```
+2. Create .env and put your API_KEY inside
+```
+GEMINI_KEY=YOUR_API_KEY
+```
