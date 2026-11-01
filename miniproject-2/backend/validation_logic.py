@@ -76,7 +76,7 @@ def validate_claim(extracted_data: dict) -> dict:
             tax_valid = False
 
     # decide final status
-    if not has_store_name or not has_npwp or not has_items or not has_tax:
+    if not has_store_name or not has_npwp or not has_items:
         status = "rejected"
     elif rejection_reasons:
         status = "needs_review"

@@ -7,3 +7,6 @@ data*
 weight*
 .env
 */dummies/*
+
+# EVAL
+*.csv

@@ -1,7 +1,7 @@
 # Receipt Validator
 
-- [Receipt's Criteria]{}
-- [Project's Setup]{}
+- [Receipt's Criteria](#receipts-criteria)
+- [Project's Setup](#setup)
 
 ## Receipt's Criteria
 The program will looking for:
@@ -25,12 +25,14 @@ Receipts will be automatically marked as **REJECTED** if these pieces of informa
 
 Receipt will be marked as **ACCEPTED** if all criteria are met and **NEED REVIEW** conversely, such as due to missing information on one of the items.
 
-## Setup
+## App Setup
 1. Create .env and put your API_KEY inside
 ```
 GEMINI_KEY=YOUR_API_KEY
 ```
 2. Build and run Docker Container
 ```
-docker compose up -d --built
+docker compose up -d --build
 ```
+
+## Testing Procedure
