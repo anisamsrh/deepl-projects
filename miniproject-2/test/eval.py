@@ -34,8 +34,8 @@ for f in tqdm(files, desc="Processing images", unit="file"):
             res_json = response.json()
 
             # general groundtruth information
-            g_truth = "accepted" if f[0] == 2 else "not accepted"
-
+            g_truth = "accepted" if (int(f[0]) == 2) else "not accepted"
+            
             # extracted information
             name = res_json.get("merchant_info", {}).get("store_name", "")
             npwp = res_json.get("merchant_info", {}).get("npwp", "")

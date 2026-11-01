@@ -56,7 +56,7 @@ async def analyze_claim(request: Request, file: UploadFile = File(...)):
         image = Image.open(io.BytesIO(contents))
 
         response = client.models.generate_content(
-            model = 'gemini-3-flash-preview',
+            model = 'gemini-3.1-flash-lite',
             contents = [PROMPT_EXTRACTION, image])
         clean_json_str = response.text.replace("```json", "").replace("```", "").strip()
         extracted_data = json.loads(clean_json_str)
